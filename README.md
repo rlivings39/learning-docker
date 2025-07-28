@@ -135,3 +135,29 @@ docker run -d \
 The `--network-alias` flag specifies the name which can be used to refer to the container on the network.
 
 **Note** Managing secrets with environment variables is ok for dev work but **bad** for production. There are many secret managers in things like Docker swarm and Kubernetes. Here's a [blog post](https://blog.diogomonica.com/2017/03/27/why-you-shouldnt-use-env-variables-for-secret-data/) showing why environment variables are bad for secrets.
+
+Docker compose allows coordinating multiple containers by defining things in a `docker-compose.yml` YAML file. You define this configuration in your repo and source control it. See the [YAML file](./docker-compose.yml) in this repo as an example.
+
+To launch the container run
+
+```
+docker compose up -d
+
+[+] Running 4/4
+ ✔ Network learning-docker_default           Created    0.3s
+ ✔ Volume "learning-docker_todo-mysql-data"  Created    0.0s
+ ✔ Container learning-docker-app-1           Started    1.1s
+ ✔ Container learning-docker-mysql-1         Started    1.1s
+```
+
+Note that this automatically creates a network to connect your containers together.
+
+```
+docker compose logs -f app
+``` shows the logs and follows output.
+
+```
+docker compose down
+```
+
+tears everything down. Adding the `--volumes` flag to `docker compose down` will remove volumes.
