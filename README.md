@@ -15,3 +15,5 @@ Docker uses **containers**. A **container** is a process on your machine that ha
 Running containers use an isolated filesystem. The custom filesystem is provided by a **container image**. The image must include everything needed to run the application - all dependencies, configuration, scripts, binaries, etc. It also contains configuration for the container like environment variables, a default command to run, and other metadata.
 
 This filesystem isolation is like an advanced version of `chroot`.
+
+To build an image for something you use a `Dockerfile` which is a textual script of instructions used to create the image.
