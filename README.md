@@ -154,10 +154,53 @@ Note that this automatically creates a network to connect your containers togeth
 
 ```
 docker compose logs -f app
-``` shows the logs and follows output.
+```
+shows the logs and follows output.
 
 ```
 docker compose down
 ```
 
 tears everything down. Adding the `--volumes` flag to `docker compose down` will remove volumes.
+
+## Image building best practices
+
+```
+docker scan image-name
+```
+
+scans for security vulnerabilities. Docker Hub can be configured to scan for vulnerabilities.
+
+```
+docker image history image-name --no-trunc
+```
+
+shows layers in the image. Oldest are at the bottom and newest are at the top.
+
+
+Copying in just `package.json yarn.lock`, then running `yarn install`, and finally copying in everything else allows caching so that dependencies are not reinstalled/created every time.
+
+Caching can significantly speed up builds.
+
+A `.dockerignore` file is used to skip copying files like `node_modules`. Read more about [containerizing Node.js web apps](https://nodejs.org/en/docs/guides/nodejs-docker-webapp/).
+
+**Multi-stage builds** allow separating build-time dependencies from runtime dependencies. Only the last stage is included in the final image. Here's a React example
+
+```docker
+FROM node:18 AS build
+WORKDIR /app
+COPY package* yarn.lock ./
+RUN yarn install
+COPY public ./public
+COPY src ./src
+RUN yarn run build
+
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+```
+
+## What's next
+
+**Container orchestration** with Swarm, Kubernetes, Nomad, and ECS all solve the problem of keeping your containers alive and the system running like it should. There's a manager that gets a definition of **expected state** like "run 2 instances of my app and expose port 80". The managers watch for changes, like a container quitting, and then work to make the **actual state** match the expected state.
+
+Cloud native computing foundation projects provide lots of projects in the cloud computing space.
