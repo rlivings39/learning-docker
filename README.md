@@ -97,3 +97,17 @@ docker volume inspect todo-db
 will show info about the volume including where it is stored.
 
 **Note** Named volumes and bind mounts are the main types of volumes. There are many volume driver plugins to support NFS, SFTP, NetApp, and more. Those are useful when working with multiple hosts in Swarm, Kubernetes, etc.
+
+**Bind mounts** allow you to specify the mount point from the host. They do not populate the volume with container contents and do not support mount drivers. They're useful for storing data and to provide data into the application.
+
+```
+docker run ... -v "$(pwd):/app" node:18-alpine sh -c "yarn install && yarn run dev"
+```
+
+will mount your source code into the container and launch the dev server so it responds to changes being made to the code.
+
+```
+docker logs -f container-id
+```
+
+shows container logs so you can know what it's doing.
