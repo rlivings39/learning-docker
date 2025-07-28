@@ -17,3 +17,24 @@ Running containers use an isolated filesystem. The custom filesystem is provided
 This filesystem isolation is like an advanced version of `chroot`.
 
 To build an image for something you use a `Dockerfile` which is a textual script of instructions used to create the image.
+
+A Dockerfile like
+
+```docker
+FROM node:18-alpine
+WORKDIR /app
+COPY . .
+RUN yarn install --production
+CMD ["node", "src/index.js"]
+```
+
+says to build from the Alpine Linux Node.js image, set up a workdir called app, copy the current folder to the working dir, run `yarn install --production` in the container, and to run `node src/index.js` to start the image.
+
+To build an image from a Dockerfile run `docker build -t image-name .`
+
+To run our test app container do
+
+```docker
+docker run -dp 3000:3000 getting-started
+```
+
