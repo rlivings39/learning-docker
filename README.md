@@ -35,6 +35,65 @@ To build an image from a Dockerfile run `docker build -t image-name .`
 To run our test app container do
 
 ```docker
-docker run -dp 3000:3000 getting-started
+docker run --name getting_started -dp 3000:3000 getting-started
 ```
 
+`docker ps` will show running containers
+
+`docker stop container-id` will stop it
+
+`docker rm container-id` removes it
+
+`docker rm -f container-id` will stop and remove it
+
+These can also be done from the Docker dashboard.
+
+## Sharing images
+
+To share an image you can create a repository on Docker Hub and run
+
+```bash
+docker login -u your-user-name
+docker tag getting-started your-user-name/getting-started
+docker push your_namespace/getting-started:tagname
+```
+
+You can now run this image on a new instance where it's never been installed.
+
+## Persisting data
+
+The container has its own filesystem and scratch space where files can be written/stored. Multiple instances of the same image do **not** share filesystem changes.
+
+To run things inside of the container you can use
+
+```bash
+docker exec <container-id> cat /data.txt
+```
+
+If you use `docker run -it ...` this launches an interactive terminal in the container.
+
+**Volumes** allow connecting filesystems inside the container back to the host filesystem. If the same host directory is mounted across container restarts, then temporary work will be preserved.
+
+The app uses an SQLite database stored in `/etc/todos/todo.db`. We can use a **named volume** in Docker to persist the data from the container to the host.
+
+```bash
+docker volume create todo-db
+```
+
+Then you can mount the volume using the `-v` flag
+
+```
+docker run --name getting_started -dp 3000:3000  -v todo-db:/etc/todos getting-started
+```
+
+That says to make the named volume `todo-db` visible inside the container at `/etc/todos/`.
+
+After removing and running that container again, you'll see that the data has been persisted.
+
+```
+docker volume inspect todo-db
+```
+
+will show info about the volume including where it is stored.
+
+**Note** Named volumes and bind mounts are the main types of volumes. There are many volume driver plugins to support NFS, SFTP, NetApp, and more. Those are useful when working with multiple hosts in Swarm, Kubernetes, etc.
