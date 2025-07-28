@@ -111,3 +111,27 @@ docker logs -f container-id
 ```
 
 shows container logs so you can know what it's doing.
+
+## Multi-container apps
+
+**Each container should do one thing and do it well**. Separate containers allow scaling and updating systems independently, give flexibility to use different services in dev and prod, etc.
+
+Containers support **networking**. If two containers are on the same network, they can communicate. If they're on different networks, they can't communicate.
+
+```
+docker network create todo-app
+```
+
+creates a network that can be used when launching an image
+```
+docker run -d \
+    --network todo-app --network-alias mysql \
+    -v todo-mysql-data:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=secret \
+    -e MYSQL_DATABASE=todos \
+    mysql:8.0
+```
+
+The `--network-alias` flag specifies the name which can be used to refer to the container on the network.
+
+**Note** Managing secrets with environment variables is ok for dev work but **bad** for production. There are many secret managers in things like Docker swarm and Kubernetes. Here's a [blog post](https://blog.diogomonica.com/2017/03/27/why-you-shouldnt-use-env-variables-for-secret-data/) showing why environment variables are bad for secrets.
