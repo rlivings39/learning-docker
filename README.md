@@ -204,3 +204,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 **Container orchestration** with Swarm, Kubernetes, Nomad, and ECS all solve the problem of keeping your containers alive and the system running like it should. There's a manager that gets a definition of **expected state** like "run 2 instances of my app and expose port 80". The managers watch for changes, like a container quitting, and then work to make the **actual state** match the expected state.
 
 Cloud native computing foundation projects provide lots of projects in the cloud computing space.
+
+## Next
+
+- [ ] https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
