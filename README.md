@@ -199,6 +199,44 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 ```
 
+## Containerizing a Node.js app
+
+https://docs.docker.com/guides/nodejs/
+
+To create a new Docker app skeleton you can run
+
+```
+docker init
+```
+
+and answer the questions.
+
+Using `docker compose` you can combine multiple containers together and declare dependencies between them.
+
+`healthcheck` allows checking on the status of a service to see if it's still alive.
+
+`secrets` allows defining secrets that are read in from files which can be reused in other parts of the container.
+
+To set up a development environment you can use a multi stage build in your dockerfile with a `base` for the base image, `dev` for the dev setup/build, and `prod` as your production build. These stages can be referred to by name in the compose file.
+
+Running
+
+```
+docker compose run server npm run test
+```
+
+will allow you to run your tests. You can add a `test` stage to the Dockerfile that uses a `RUN` instead of `CMD` to run tests during container build. Doing that ensures the build fails if the tests fail.
+
+```
+docker build -t node-docker-image-test --progress=plain --no-cache --target test .
+```
+
+The guide shows how to set up [CI/CD for the app](https://docs.docker.com/guides/nodejs/configure-ci-cd/) to test, build, and deploy to Docker Hub.
+
+That introduced the idea of adding **repository variables** and **repository secrets** in GitHub that can be referenced in CI/CD.
+
+Finally they discuss [testing locally in Kubernetes](https://docs.docker.com/guides/nodejs/deploy/).
+
 ## What's next
 
 **Container orchestration** with Swarm, Kubernetes, Nomad, and ECS all solve the problem of keeping your containers alive and the system running like it should. There's a manager that gets a definition of **expected state** like "run 2 instances of my app and expose port 80". The managers watch for changes, like a container quitting, and then work to make the **actual state** match the expected state.
