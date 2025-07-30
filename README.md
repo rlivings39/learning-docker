@@ -246,3 +246,4 @@ Cloud native computing foundation projects provide lots of projects in the cloud
 ## Next
 
 - [ ] https://docs.docker.com/guides/nodejs/containerize/
+- [ ] https://fastapi.tiangolo.com/deployment/docker/#a-simple-app
