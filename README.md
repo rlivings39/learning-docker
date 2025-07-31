@@ -237,6 +237,26 @@ That introduced the idea of adding **repository variables** and **repository sec
 
 Finally they discuss [testing locally in Kubernetes](https://docs.docker.com/guides/nodejs/deploy/).
 
+## Managing secrets
+
+Tools like [Mozilla SOPS](https://github.com/getsops/sops) (w/ age), Ansible/Puppet vault modes, Hashicorp vault, Vaultwarden, GitHub secrets, AWS Secrets Manager, Azure Key Vault, Google Cloud Secret Manager were all mentioned. **Secret management** is the search term.
+
+Stub .env files with empty placeholders for the secrets.
+
+BUT, environment variables aren't very secure. They can often be read from outside the running process, might show up in command history when launching your service, and are by default visible to all libraries you use in your service & child processes.
+
+Tips from [GitHub](https://docs.github.com/en/get-started/learning-to-code/storing-your-secrets-safely)
+
+* Follow the principle of least privilege. Restrict secrets to have the minimum permissions necessary.
+* Protect secrets in your application. Never hardcode them in code. Use environment variables or secret management tools like GitHub secrets.
+* Set expiration dates and rotate regularly
+* Ensure secrets are redacted during logging
+* Limit damage if a secret is exposed. Revoke immediately if you suspect something leaked.
+* Monitor activity logs to unauthorized access
+* Harden based on your experience
+
+GitHub has a secret manager that integrates with actions.
+
 ## What's next
 
 **Container orchestration** with Swarm, Kubernetes, Nomad, and ECS all solve the problem of keeping your containers alive and the system running like it should. There's a manager that gets a definition of **expected state** like "run 2 instances of my app and expose port 80". The managers watch for changes, like a container quitting, and then work to make the **actual state** match the expected state.
